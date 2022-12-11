@@ -41,7 +41,7 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>lt.tiem625.App</mainClass>
+                            <mainClass>lt.tiem625.docbuild.App</mainClass>
                         </configuration>
                     </execution>
                 </executions>

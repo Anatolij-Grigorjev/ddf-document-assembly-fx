@@ -1,4 +1,4 @@
-package lt.tiem625;
+package lt.tiem625.docbuild;
 
 import javafx.fxml.FXML;
 
