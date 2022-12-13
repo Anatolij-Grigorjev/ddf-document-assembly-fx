@@ -10,13 +10,13 @@
    <children>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label text="Start typing an item name for suggestions...">
+            <Label fx:id="changingEntityLabel" text="Setting new value...">
                <padding>
                   <Insets bottom="10.0" left="5.0" right="15.0" top="10.0" />
                </padding>
             </Label>
-            <TextField fx:id="searchItemText" promptText="Type an item name..." />
-            <ListView fx:id="suggestionsList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="800.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
+            <TextField fx:id="searchItemTextField" promptText="Type an item name to see suggestions..." />
+            <ListView fx:id="suggestionsListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="800.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
