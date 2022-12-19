@@ -1,7 +1,8 @@
 package lt.tiem625.docbuild.components.selectableitemdialog;
 
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,10 +12,7 @@ import javafx.scene.control.TextField;
 import lt.tiem625.docbuild.ViewableEntity;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 public class SelectableItemDialogController<T extends ViewableEntity> implements Initializable {
 
@@ -28,12 +26,11 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
     private ListView<T> suggestionsListView;
 
     private List<T> suggestions;
-    private final Property<T> prevValueProperty = new SimpleObjectProperty<>(null);
+    private final StringProperty changingValueProperty = new SimpleStringProperty("");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        bindLabelToPrevValue();
         bindTextFieldToPrevValue();
         bindListOptionsToCurrentFieldText();
 
@@ -53,17 +50,19 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
     }
 
     private void bindTextFieldToPrevValue() {
-        searchItemTextField.textProperty().bind(prevValueProperty.map(ViewableEntity::asView));
+        searchItemTextField.textProperty().bindBidirectional(changingValueProperty);
     }
 
-    private void bindLabelToPrevValue() {
-        changingEntityLabel.textProperty().bind(
-                prevValueProperty.map(passedVal -> String.format("Changing set value '%s'...", passedVal.asView()))
-        );
+    private void bindLabelToPrevValue(String view) {
+        changingEntityLabel.setText(String.format("Changing from previous value '%s'...", view));
     }
 
     public void setDialogData(T prevValue, Set<? extends T> suggestions) {
-        this.prevValueProperty.setValue(prevValue);
+        Optional.ofNullable(prevValue).map(ViewableEntity::asView).ifPresent(view -> {
+            bindLabelToPrevValue(view);
+            changingValueProperty.setValue(view);
+        });
         this.suggestions = suggestions != null ? new ArrayList<>(suggestions) : List.of();
+
     }
 }
