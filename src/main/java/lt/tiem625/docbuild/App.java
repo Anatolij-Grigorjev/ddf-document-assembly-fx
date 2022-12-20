@@ -29,7 +29,7 @@ public class App extends Application {
 
         ViewWithController<SelectableItemDialogController<StructureType>> loadedFXML = loadFXML(fxml);
         scene.setRoot(loadedFXML.view);
-        loadedFXML.controller.setDialogData(new StructureType("Unknown"), Set.of(
+        loadedFXML.controller.setDialogData(new StructureType("SQL"), Set.of(
                 new StructureType("SQL Table"),
                 new StructureType("SQL View"),
                 new StructureType("CSV File"),
