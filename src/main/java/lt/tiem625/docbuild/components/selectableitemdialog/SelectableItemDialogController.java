@@ -45,8 +45,8 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
         });
 
         suggestionsListView.getSelectionModel().selectedItemProperty()
-                .addListener((observable, nextVal, prevVal) ->
-                        Optional.ofNullable(nextVal)
+                .addListener((observable, prevVal, nextVal) ->
+                        Optional.ofNullable(observable.getValue())
                                 .map(ViewableEntity::asView)
                                 .ifPresent(searchItemTextField::setText)
                 );
