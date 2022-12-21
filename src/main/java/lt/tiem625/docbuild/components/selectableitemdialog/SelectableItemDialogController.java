@@ -1,7 +1,9 @@
 package lt.tiem625.docbuild.components.selectableitemdialog;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 import lt.tiem625.docbuild.ViewableEntity;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,12 +30,25 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
     private ListView<T> suggestionsListView;
 
     private T prevValue;
-    private List<T> suggestions;
+
+    private ObservableList<T> suggestionsObservableList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        suggestionsListView.setCellFactory(listView -> new ListCell<>() {
+        suggestionsListView.setCellFactory(buildEntitySuggestionsCellFactory());
+        suggestionsListView.getSelectionModel().selectedItemProperty()
+                .addListener((observable, prevVal, nextVal) ->
+                        Optional.ofNullable(observable.getValue())
+                                .map(ViewableEntity::asView)
+                                .ifPresent(view -> Platform.runLater(() -> searchItemTextField.setText(view)))
+                );
+        bindSuggestionsListToCurrentFieldText();
+        setDialogData(null, null);
+    }
+
+    protected Callback<ListView<T>, ListCell<T>> buildEntitySuggestionsCellFactory() {
+        return listView -> new ListCell<>() {
             @Override
             protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
@@ -42,23 +58,15 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
                     setText(item.asView());
                 }
             }
-        });
-
-        suggestionsListView.getSelectionModel().selectedItemProperty()
-                .addListener((observable, prevVal, nextVal) ->
-                        Optional.ofNullable(observable.getValue())
-                                .map(ViewableEntity::asView)
-                                .ifPresent(searchItemTextField::setText)
-                );
-        setDialogData(null, null);
+        };
     }
 
-    private void bindCurrentSuggestionsListToCurrentFieldText() {
+    private void bindSuggestionsListToCurrentFieldText() {
 
-        List<T> presentSuggestionsList = suggestions == null ? List.of() : suggestions;
-        var filteredList = new FilteredList<>(FXCollections.observableList(presentSuggestionsList));
-        suggestionsListView.itemsProperty().setValue(filteredList);
-        filteredList.predicateProperty().bind(
+        suggestionsObservableList = FXCollections.observableList(new ArrayList<>());
+        FilteredList<T> filteredSuggestionsList = new FilteredList<>(suggestionsObservableList);
+        suggestionsListView.itemsProperty().setValue(filteredSuggestionsList);
+        filteredSuggestionsList.predicateProperty().bind(
                 searchItemTextField.textProperty()
                         .flatMap(text -> new SimpleObjectProperty<>(suggestion -> StringUtils.containsIgnoreCase(suggestion.asView(), text)))
         );
@@ -87,7 +95,7 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
         setLabelTextFromPrevValue();
         setTextFieldFromPrevValue();
 
-        this.suggestions = suggestions != null ? new ArrayList<>(suggestions) : List.of();
-        bindCurrentSuggestionsListToCurrentFieldText();
+        List<T> suggestionsList = suggestions != null ? new ArrayList<>(suggestions) : List.of();
+        suggestionsObservableList.setAll(suggestionsList);
     }
 }
