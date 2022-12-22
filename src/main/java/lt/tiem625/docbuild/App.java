@@ -28,7 +28,7 @@ public class App extends Application {
     static void setRoot(String fxml) throws IOException {
 
         ViewWithController<SelectableItemDialogController<StructureType>> loadedFXML = loadFXML(fxml);
-        scene.setRoot(loadedFXML.view);
+
         loadedFXML.controller.setDialogData(new StructureType("SQL"), Set.of(
                 new StructureType("SQL Table"),
                 new StructureType("SQL View"),
@@ -36,6 +36,7 @@ public class App extends Application {
                 new StructureType("XLSX File")
         ));
     }
+
 
     private static <T> ViewWithController<T> loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ClassLoader.getSystemResource("fxml/" + fxml + ".fxml"));

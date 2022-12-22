@@ -7,10 +7,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import lt.tiem625.docbuild.ViewableEntity;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.net.URL;
 import java.util.*;
 
-public class SelectableItemDialogController<T extends ViewableEntity> implements Initializable {
+public abstract class SelectableItemDialogController<T extends ViewableEntity> implements Initializable {
 
     @FXML
     private Label changingEntityLabel;
@@ -33,6 +38,19 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
 
     private ObservableList<T> suggestionsObservableList;
 
+    private static Stage dialogWindow;
+    private static ViewableEntity decidedValue;
+
+    public static <T extends ViewableEntity> T setupAndRunDialogScene(Parent contents) {
+        dialogWindow = new Stage(StageStyle.UTILITY);
+        dialogWindow.initModality(Modality.APPLICATION_MODAL);
+        dialogWindow.setTitle("Select entity");
+        dialogWindow.setScene(new Scene(contents));
+
+        dialogWindow.showAndWait();
+        return (T) decidedValue;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -45,6 +63,34 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
                 );
         bindSuggestionsListToCurrentFieldText();
         setDialogData(null, null);
+    }
+
+    @FXML
+    private void onSubmitClicked() {
+        if (suggestionsListView.getItems().isEmpty() || suggestionsListView.getSelectionModel().isEmpty()) {
+            decidedValue = constructEntityForNewText(searchItemTextField.getText());
+        } else {
+            decidedValue = suggestionsListView.getSelectionModel().getSelectedItem();
+        }
+        dialogWindow.close();
+    }
+
+    public abstract T constructEntityForNewText(String enteredText);
+
+    @FXML
+    private void onDiscardClicked() {
+        decidedValue = this.prevValue;
+        dialogWindow.close();
+    }
+
+    public void setDialogData(T prevValue, Set<? extends T> suggestions) {
+        this.prevValue = prevValue;
+        decidedValue = this.prevValue;
+        setLabelTextFromPrevValue();
+        setTextFieldFromPrevValue();
+
+        List<T> suggestionsList = suggestions != null ? new ArrayList<>(suggestions) : List.of();
+        suggestionsObservableList.setAll(suggestionsList);
     }
 
     protected Callback<ListView<T>, ListCell<T>> buildEntitySuggestionsCellFactory() {
@@ -88,14 +134,5 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
                 () -> changingEntityLabel.setText("Setting entity value...")
         );
 
-    }
-
-    public void setDialogData(T prevValue, Set<? extends T> suggestions) {
-        this.prevValue = prevValue;
-        setLabelTextFromPrevValue();
-        setTextFieldFromPrevValue();
-
-        List<T> suggestionsList = suggestions != null ? new ArrayList<>(suggestions) : List.of();
-        suggestionsObservableList.setAll(suggestionsList);
     }
 }
