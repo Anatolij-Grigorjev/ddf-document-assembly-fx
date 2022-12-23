@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lt.tiem625.docbuild.components.selectableitemdialog.SelectableItemDialogController;
+import lt.tiem625.docbuild.components.selectableitemdialog.ValueBuilder;
 import lt.tiem625.docbuild.model.StructureType;
 
 import java.io.IOException;
@@ -29,12 +30,17 @@ public class App extends Application {
 
         ViewWithController<SelectableItemDialogController<StructureType>> loadedFXML = loadFXML(fxml);
 
-        loadedFXML.controller.setDialogData(new StructureType("SQL"), Set.of(
-                new StructureType("SQL Table"),
-                new StructureType("SQL View"),
-                new StructureType("CSV File"),
-                new StructureType("XLSX File")
-        ));
+        loadedFXML.controller.setDialogData(
+                null,
+                Set.of(
+                        new StructureType("SQL Table"),
+                        new StructureType("SQL View"),
+                        new StructureType("CSV File"),
+                        new StructureType("XLSX File")
+                ), ValueBuilder.notSupported()
+        );
+        StructureType selectedStructureType = SelectableItemDialogController.setupAndRunDialogScene(loadedFXML.view);
+        System.out.println("Selected structure type: " + (selectedStructureType != null ? selectedStructureType.asView() : "NULL"));
     }
 
 
@@ -43,7 +49,8 @@ public class App extends Application {
         return new ViewWithController<T>(fxmlLoader.load(), fxmlLoader.getController());
     }
 
-    record ViewWithController<T>(Parent view, T controller) {}
+    record ViewWithController<T>(Parent view, T controller) {
+    }
 
     public static void main(String[] args) {
         launch();

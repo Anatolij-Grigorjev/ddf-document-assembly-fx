@@ -9,10 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -23,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.net.URL;
 import java.util.*;
 
-public abstract class SelectableItemDialogController<T extends ViewableEntity> implements Initializable {
+public class SelectableItemDialogController<T extends ViewableEntity> implements Initializable {
 
     @FXML
     private Label changingEntityLabel;
@@ -35,8 +32,9 @@ public abstract class SelectableItemDialogController<T extends ViewableEntity> i
     private ListView<T> suggestionsListView;
 
     private T prevValue;
-
+    private ValueBuilder<T> valueBuilder;
     private ObservableList<T> suggestionsObservableList;
+
 
     private static Stage dialogWindow;
     private static ViewableEntity decidedValue;
@@ -62,20 +60,51 @@ public abstract class SelectableItemDialogController<T extends ViewableEntity> i
                                 .ifPresent(view -> Platform.runLater(() -> searchItemTextField.setText(view)))
                 );
         bindSuggestionsListToCurrentFieldText();
-        setDialogData(null, null);
+        setDialogData(null, null, ValueBuilder.notSupported());
     }
 
     @FXML
     private void onSubmitClicked() {
-        if (suggestionsListView.getItems().isEmpty() || suggestionsListView.getSelectionModel().isEmpty()) {
-            decidedValue = constructEntityForNewText(searchItemTextField.getText());
-        } else {
-            decidedValue = suggestionsListView.getSelectionModel().getSelectedItem();
+        if (getVisibleSuggestionsCount() == 1) {
+            decidedValue = suggestionsListView.getItems().get(0);
+            dialogWindow.close();
+            return;
         }
+
+        if (getVisibleSuggestionsCount() > 1) {
+            showMustPickOnlyOneValueAlert();
+            return;
+        }
+
+        if (!valueBuilder.canBuildFromText()) {
+            showUnsupportedFeatureAlert();
+            return;
+        }
+
+        decidedValue = valueBuilder.buildFromText(searchItemTextField.getText());
         dialogWindow.close();
     }
 
-    public abstract T constructEntityForNewText(String enteredText);
+    private void showUnsupportedFeatureAlert() {
+
+        var alertDialog =
+                new Alert(Alert.AlertType.ERROR,
+                        "Inventing new examples not supported for this entity, please chose from suggestions list!",
+                        ButtonType.OK);
+        alertDialog.showAndWait();
+    }
+
+    private void showMustPickOnlyOneValueAlert() {
+        var alertDialog =
+                new Alert(Alert.AlertType.INFORMATION,
+                        "Please pick only one matching suggestion (with mouse or by typing more of its unique text)",
+                        ButtonType.OK);
+        alertDialog.showAndWait();
+    }
+
+    private int getVisibleSuggestionsCount() {
+        return suggestionsListView.getItems().size();
+    }
 
     @FXML
     private void onDiscardClicked() {
@@ -83,7 +112,9 @@ public abstract class SelectableItemDialogController<T extends ViewableEntity> i
         dialogWindow.close();
     }
 
-    public void setDialogData(T prevValue, Set<? extends T> suggestions) {
+    public void setDialogData(T prevValue, Set<? extends T> suggestions, ValueBuilder<T> valueBuilder) {
+        Objects.requireNonNull(valueBuilder);
+        this.valueBuilder = valueBuilder;
         this.prevValue = prevValue;
         decidedValue = this.prevValue;
         setLabelTextFromPrevValue();
