@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lt.tiem625.docbuild.components.selectableitemdialog.SelectableItemDialogController;
 import lt.tiem625.docbuild.components.selectableitemdialog.ValueBuilder;
-import lt.tiem625.docbuild.model.StructureType;
+import lt.tiem625.docbuild.data.StructureType;
 
 import java.io.IOException;
 import java.util.Set;
