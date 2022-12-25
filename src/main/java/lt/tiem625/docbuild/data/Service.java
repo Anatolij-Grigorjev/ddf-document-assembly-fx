@@ -1,5 +1,11 @@
 package lt.tiem625.docbuild.data;
 
-public record Service(String name, IntegrationType integrationType) {
+import lt.tiem625.docbuild.ViewableEntity;
 
+public record Service(String name, IntegrationType integrationType) implements ViewableEntity {
+
+    @Override
+    public String asView() {
+        return String.format("%s (%s)", name, integrationType.name());
+    }
 }

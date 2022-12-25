@@ -6,6 +6,6 @@ public record IntegrationType(String name, boolean isDeprecated) implements View
 
     @Override
     public String asView() {
-        return name;
+        return name + (isDeprecated ? " [DEPRECATED]" : "");
     }
 }
