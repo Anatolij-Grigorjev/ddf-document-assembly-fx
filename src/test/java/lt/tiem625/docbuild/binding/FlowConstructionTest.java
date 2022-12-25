@@ -1,5 +1,6 @@
 package lt.tiem625.docbuild.binding;
 
+import lt.tiem625.docbuild.data.IntegrationType;
 import lt.tiem625.docbuild.data.StructureType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -9,6 +10,7 @@ class FlowConstructionTest {
 
     private FlowConstruction construction;
     private final StructureType SQL_TABLE = new StructureType("SQL Table");
+    private final IntegrationType API = new IntegrationType("API");
 
     @BeforeEach
     public void setupConstruction() {
