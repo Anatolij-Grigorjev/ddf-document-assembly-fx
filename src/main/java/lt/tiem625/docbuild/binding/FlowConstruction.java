@@ -3,7 +3,6 @@ package lt.tiem625.docbuild.binding;
 import lt.tiem625.docbuild.data.BusinessApplication;
 import lt.tiem625.docbuild.data.Service;
 import lt.tiem625.docbuild.data.Structure;
-import lt.tiem625.docbuild.data.StructureAttribute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,39 +13,37 @@ import java.util.List;
  */
 public class FlowConstruction {
 
+    FlowStructure constructing;
+
     public FlowConstruction() {
-        serviceFeeds = new ArrayList<>();
+        constructing = new FlowStructure();
     }
 
+    public ApplicationsMappingsContext applicationsMappingsConstruction(BusinessApplication source, BusinessApplication target) {
+        return null;
+    }
 
+    public static class ApplicationsMappingsContext {
 
-    private BusinessApplication source;
-    private List<ServiceFeed> serviceFeeds;
-    private BusinessApplication target;
-
-    private static class ServiceFeed {
-
-        private Service flowService;
-        List<StructuresMap> structuresMaps;
-
-        public ServiceFeed() {
-            structuresMaps = new ArrayList<>();
+        BusinessApplication source;
+        BusinessApplication target;
+        List<SpecificStructuresFlow> dataFlowsList;
+        private ApplicationsMappingsContext(BusinessApplication source, BusinessApplication target) {
+            this.source = source;
+            this.target = target;
+            this.dataFlowsList = new ArrayList<>();
         }
 
-        private static class StructuresMap {
+        public List<SpecificStructuresFlow> getDataFlowsListView() {
+            throw new UnsupportedOperationException("TODO");
+        }
 
-            private StructureWithAttributes source;
-            private StructureWithAttributes target;
+        public void addDataFlow(Structure sourceStructure, Service flowService, Structure targetStructure) {
+            throw new UnsupportedOperationException("TODO");
+        }
 
-            private static class StructureWithAttributes {
-
-                Structure structure;
-                List<StructureAttribute> attributes;
-
-                public StructureWithAttributes() {
-                    attributes = new ArrayList<>();
-                }
-            }
+        public void removeDataFlow(Structure sourceStructure, Service flowService, Structure targetStructure) {
+            throw new UnsupportedOperationException("TODO");
         }
     }
 }
