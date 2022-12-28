@@ -1,5 +1,6 @@
 package lt.tiem625.docbuild.binding;
 
+import lt.tiem625.docbuild.binding.FlowStructure.DataFlowMapping;
 import lt.tiem625.docbuild.data.*;
 import org.junit.jupiter.api.*;
 
@@ -67,9 +68,9 @@ class FlowConstructionTest {
     public void create_applications_context_invoke_with_new_applications_gets_new_context() {
 
         var applicationsMappingsConstruction = construction.applicationsMappingsConstruction(EXAMPLE_APPLICATION, EXAMPLE_ASSET);
-        var service = new Service(EXAMPLE_APPLICATION, "service", API);
+        var service = new Service(EXAMPLE_ASSET, "service", API);
         var sourceStructure = new Structure(EXAMPLE_APPLICATION, "source-structure", SQL_TABLE);
-        var targetStructure = new Structure(EXAMPLE_APPLICATION, "target-structure", SQL_TABLE);
+        var targetStructure = new Structure(EXAMPLE_ASSET, "target-structure", SQL_TABLE);
         applicationsMappingsConstruction.addDataFlow(sourceStructure, service, targetStructure);
 
         Assertions.assertEquals(EXAMPLE_APPLICATION, construction.constructing.source);
@@ -141,11 +142,28 @@ class FlowConstructionTest {
 
         applicationsMappingsConstruction.addDataFlow(sourceStructure, service, targetStructure);
 
-        List<SpecificStructuresFlow> flows = applicationsMappingsConstruction.getDataFlowsListView();
+        List<DataFlowMapping> flows = applicationsMappingsConstruction.getDataFlowsListView();
 
-        SpecificStructuresFlow structuresFlow = flows.get(0);
+        DataFlowMapping structuresFlow = flows.get(0);
         structuresFlow.specifySourceAttribute(new StructureAttribute(sourceStructure, "source-attr"));
 
         Assertions.assertEquals(1, construction.constructing.dataFlowMappings.get(0).source.attributes.size());
+    }
+
+    @Test
+    public void cant_add_attribute_of_another_structure() {
+        var applicationsMappingsConstruction = construction.applicationsMappingsConstruction(EXAMPLE_APPLICATION, EXAMPLE_APPLICATION);
+        var service = new Service(EXAMPLE_APPLICATION, "service", API);
+        var sourceStructure = new Structure(EXAMPLE_APPLICATION, "source-structure", SQL_TABLE);
+        var targetStructure = new Structure(EXAMPLE_APPLICATION, "target-structure", SQL_TABLE);
+
+        applicationsMappingsConstruction.addDataFlow(sourceStructure, service, targetStructure);
+
+        List<DataFlowMapping> flows = applicationsMappingsConstruction.getDataFlowsListView();
+
+        DataFlowMapping structuresFlow = flows.get(0);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                structuresFlow.specifyTargetAttribute(new StructureAttribute(sourceStructure, "source-attr"))
+        );
     }
 }
