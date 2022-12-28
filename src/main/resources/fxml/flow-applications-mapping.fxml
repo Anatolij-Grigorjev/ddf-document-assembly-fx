@@ -1,43 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox layoutX="250.0" layoutY="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="250.0" layoutY="100.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
          <children>
-            <AnchorPane maxWidth="600.0">
+            <AnchorPane maxWidth="1.7976931348623157E308" prefWidth="570.0" VBox.vgrow="ALWAYS">
                <children>
-                  <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="10.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                        <AnchorPane prefHeight="200.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <TitledPane animated="false" collapsible="false" maxWidth="1.7976931348623157E308" minWidth="10.0" text="Source Business Application" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TitledPane animated="false" collapsible="false" maxWidth="1.7976931348623157E308" minHeight="10.0" prefWidth="1000.0" text="Source Business Application" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <content>
                                   <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="10.0">
                                        <children>
-                                          <HBox prefHeight="100.0" prefWidth="10000.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <padding>
-                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                             </padding>
+                                          <HBox prefWidth="10000.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="1000.0" prefWidth="1000.0" text="Application" HBox.hgrow="ALWAYS">
+                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="10.0" prefWidth="1000.0" text="Application" HBox.hgrow="ALWAYS">
                                                    <HBox.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                    </HBox.margin>
                                                    <padding>
-                                                      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                 </Button>
-                                                <Button mnemonicParsing="false" prefHeight="1000.0" prefWidth="1000.0" text="Data Asset">
+                                                <Button mnemonicParsing="false" prefHeight="10.0" prefWidth="1000.0" text="Data Asset">
                                                    <padding>
-                                                      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                    <HBox.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -61,28 +57,25 @@
                            </children>
                         </AnchorPane>
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                        <AnchorPane HBox.hgrow="ALWAYS">
                            <children>
-                              <TitledPane animated="false" collapsible="false" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" text="Target Business Application" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TitledPane animated="false" collapsible="false" maxWidth="1.7976931348623157E308" minHeight="10.0" prefWidth="1000.0" text="Target Business Application" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
                                     <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="10.0">
                                        <children>
-                                          <HBox prefHeight="100.0" prefWidth="10000.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <padding>
-                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                             </padding>
+                                          <HBox layoutX="10.0" layoutY="10.0" prefWidth="1000.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="1000.0" prefWidth="1000.0" text="Application" HBox.hgrow="ALWAYS">
+                                                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="10.0" prefWidth="1000.0" text="Application" HBox.hgrow="ALWAYS">
                                                    <HBox.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                    </HBox.margin>
                                                    <padding>
-                                                      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                 </Button>
-                                                <Button mnemonicParsing="false" prefHeight="1000.0" prefWidth="1000.0" text="Data Asset">
+                                                <Button mnemonicParsing="false" prefHeight="10.0" prefWidth="1000.0" text="Data Asset" HBox.hgrow="ALWAYS">
                                                    <padding>
-                                                      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                    <HBox.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -109,6 +102,17 @@
                   </HBox>
                </children>
             </AnchorPane>
+            <Separator prefWidth="200.0" />
+            <AnchorPane prefHeight="350.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Pane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Pane>
+               </children>
+            </AnchorPane>
+            <Separator prefWidth="200.0" />
          </children>
       </VBox>
    </children>
