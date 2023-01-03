@@ -8,13 +8,11 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import lt.tiem625.docbuild.ViewableEntity;
+import lt.tiem625.docbuild.components.DialogBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -40,10 +38,10 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
     private static ViewableEntity decidedValue;
 
     public static <T extends ViewableEntity> T setupAndRunDialogScene(Parent contents) {
-        dialogWindow = new Stage(StageStyle.UTILITY);
-        dialogWindow.initModality(Modality.APPLICATION_MODAL);
-        dialogWindow.setTitle("Select entity");
-        dialogWindow.setScene(new Scene(contents));
+        dialogWindow = DialogBuilder.newDialog()
+                .withScene(contents)
+                .withTitle("Select entity")
+                .build();
 
         dialogWindow.showAndWait();
         return (T) decidedValue;
