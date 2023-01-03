@@ -7,12 +7,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import lt.tiem625.docbuild.ViewableEntity;
 import lt.tiem625.docbuild.components.DialogBuilder;
+import lt.tiem625.docbuild.components.ViewsKeys;
+import lt.tiem625.docbuild.components.ViewsRepository;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -35,11 +36,16 @@ public class SelectableItemDialogController<T extends ViewableEntity> implements
 
 
     private static Stage dialogWindow;
+    private static ViewsKeys currentViewKey;
     private static ViewableEntity decidedValue;
 
-    public static <T extends ViewableEntity> T setupAndRunDialogScene(Parent contents) {
+    public SelectableItemDialogController(ViewsKeys viewKey) {
+        currentViewKey = viewKey;
+    }
+
+    public static <T extends ViewableEntity> T setupAndRunAsDialog() {
         dialogWindow = DialogBuilder.newDialog()
-                .withScene(contents)
+                .withScene(ViewsRepository.getAt(currentViewKey))
                 .withTitle("Select entity")
                 .build();
 
