@@ -6,8 +6,9 @@ import javafx.stage.Stage;
 import lt.tiem625.docbuild.components.ViewWithController;
 import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsLoader;
-import lt.tiem625.docbuild.components.selectableitemdialog.SelectableItemDialogController;
-import lt.tiem625.docbuild.components.selectableitemdialog.ValueBuilder;
+import lt.tiem625.docbuild.components.dialogutils.DialogRunner;
+import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
+import lt.tiem625.docbuild.components.selectableitempicker.ValueBuilder;
 import lt.tiem625.docbuild.data.StructureType;
 
 import java.io.IOException;
@@ -27,9 +28,9 @@ public class App extends Application {
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
+    static void setRoot() throws IOException {
 
-        ViewWithController<SelectableItemDialogController<StructureType>> loadedFXML = ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.DIALOG_SELECT_STRUCTURE_TYPE);
+        ViewWithController<SelectableItemPickerController<StructureType>> loadedFXML = ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.DIALOG_SELECT_STRUCTURE_TYPE);
         loadedFXML.controller().setDialogData(
                 null,
                 Set.of(
@@ -39,7 +40,7 @@ public class App extends Application {
                         new StructureType("XLSX File")
                 ), ValueBuilder.notSupported()
         );
-        StructureType selectedStructureType = SelectableItemDialogController.setupAndRunAsDialog();
+        StructureType selectedStructureType = DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_STRUCTURE_TYPE);
         System.out.println("Selected structure type: " + (selectedStructureType != null ? selectedStructureType.asView() : "NULL"));
     }
 

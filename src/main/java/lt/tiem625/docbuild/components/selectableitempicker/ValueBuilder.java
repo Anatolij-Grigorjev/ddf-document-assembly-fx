@@ -1,4 +1,4 @@
-package lt.tiem625.docbuild.components.selectableitemdialog;
+package lt.tiem625.docbuild.components.selectableitempicker;
 
 @FunctionalInterface
 public interface ValueBuilder<T> {

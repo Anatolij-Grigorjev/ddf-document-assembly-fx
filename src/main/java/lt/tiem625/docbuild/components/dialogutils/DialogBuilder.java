@@ -1,4 +1,4 @@
-package lt.tiem625.docbuild.components;
+package lt.tiem625.docbuild.components.dialogutils;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;

@@ -1,7 +1,5 @@
 package lt.tiem625.docbuild.components;
 
-import javafx.scene.Parent;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ViewsRepository {
@@ -10,13 +8,14 @@ public class ViewsRepository {
         throw new UnsupportedOperationException("static helper");
     }
 
-    private static final ConcurrentHashMap<ViewsKeys, Parent> loadedViews = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<ViewsKeys, ViewWithController<?>> loadedViews = new ConcurrentHashMap<>();
 
-    public static Parent store(ViewsKeys key, Parent view) {
-        return loadedViews.put(key, view);
+    public static ViewWithController<?> store(ViewsKeys key, ViewWithController<?> viewAndController) {
+        loadedViews.put(key, viewAndController);
+        return viewAndController;
     }
 
-    public static Parent getAt(ViewsKeys key) {
-        return loadedViews.get(key);
+    public static <T> ViewWithController<T> getAt(ViewsKeys key) {
+        return (ViewWithController<T>) loadedViews.get(key);
     }
 }
