@@ -1,11 +1,15 @@
 package lt.tiem625.docbuild.components;
 
-import lt.tiem625.docbuild.PrimaryController;
+import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
 import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
 
 public enum ViewsKeys {
 
-    EXAMPLE("fxml/primary.fxml", "primary1", PrimaryController.class),
+    SCREEN_APPLICATIONS_FLOW(
+            "fxml/flow-applications-mapping.fxml",
+            "Select source/target applications",
+            ApplicationsFlowViewController.class
+    ),
     DIALOG_SELECT_STRUCTURE_TYPE(
             "fxml/selectable-item-pane.fxml",
             "Select Structure Type",
