@@ -33,7 +33,11 @@ public class DialogBuilder {
         var dialog = new Stage(StageStyle.UTILITY);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(title);
-        dialog.setScene(new Scene(sceneContents));
+        dialog.setScene(
+                sceneContents.getScene() == null ?
+                        new Scene(sceneContents)
+                        : sceneContents.getScene()
+        );
 
         return dialog;
     }
