@@ -13,15 +13,15 @@ public class DialogRunner {
 
     /**
      * Run dialog and wait for result value.
-     * The viewKey at <code>viewKey</code> should already be loaded before this call
-     * @param viewKey the view loader key referencing a loaded view in {@link ViewsRepository}
+     * The dialogView at <code>dialogView</code> should already be loaded before this call
+     * @param dialogView the view loader key referencing a loaded view in {@link ViewsRepository}
      * @return the acquired value from running the dialog to completion
      * @param <T> type of return value after dialog is run
      */
-    public static <T> T runValueDialog(ViewsKeys viewKey) {
-        ViewWithController<?> viewAndController = ViewsRepository.getAt(viewKey);
+    public static <T> T runValueDialog(ViewsKeys dialogView, String title) {
+        ViewWithController<?> viewAndController = ViewsRepository.getAt(dialogView);
         var dialogWindow = DialogBuilder.newDialog()
-                .withTitle(viewKey.getViewName())
+                .withTitle(title)
                 .withScene(viewAndController.view())
                 .build();
         ValueDialogViewController<T> controller = (ValueDialogViewController<T>) viewAndController.controller();

@@ -7,33 +7,25 @@ public enum ViewsKeys {
 
     SCREEN_APPLICATIONS_FLOW(
             "fxml/flow-applications-mapping.fxml",
-            "Select source/target applications",
             ApplicationsFlowViewController.class
     ),
-    DIALOG_SELECT_STRUCTURE_TYPE(
+    DIALOG_SELECT_KNOWN_ENTITY(
             "fxml/selectable-item-pane.fxml",
-            "Select Structure Type",
             SelectableItemPickerController.class
     );
 
     private final String fxmlPath;
-    private final String viewName;
     private final Class<?> controllerClazz;
 
-    ViewsKeys(String fxmlPath, String viewName, Class<?> controllerClazz) {
+    ViewsKeys(String fxmlPath, Class<?> controllerClazz) {
 
         this.fxmlPath = fxmlPath;
-        this.viewName = viewName;
         this.controllerClazz = controllerClazz;
     }
 
 
     public String getFxmlPath() {
         return fxmlPath;
-    }
-
-    public String getViewName() {
-        return viewName;
     }
 
     public Class<?> getControllerClazz() {

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import lt.tiem625.docbuild.ViewableEntity;
 import lt.tiem625.docbuild.components.ValueDialogViewController;
+import lt.tiem625.docbuild.components.dialogutils.Alerts;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
@@ -80,12 +81,7 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
     }
 
     private void showUnsupportedFeatureAlert() {
-
-        var alertDialog =
-                new Alert(Alert.AlertType.ERROR,
-                        "Inventing new examples not supported for this entity, please chose from suggestions list!",
-                        ButtonType.OK);
-        alertDialog.showAndWait();
+        Alerts.alertErrorOK("Inventing new examples not supported for this entity, please chose from suggestions list!");
     }
 
     private void showMustPickOnlyOneValueAlert() {

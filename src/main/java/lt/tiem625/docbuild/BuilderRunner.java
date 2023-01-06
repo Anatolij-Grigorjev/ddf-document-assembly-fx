@@ -9,6 +9,7 @@ import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsLoader;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlow;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
+import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
 import lt.tiem625.docbuild.datasource.MetadataProvider;
 import lt.tiem625.docbuild.datasource.MockMetadataProvider;
 
@@ -28,6 +29,12 @@ public class BuilderRunner extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         mainViewStage = stage;
+        //load helper dialog view
+        ViewWithController<SelectableItemPickerController<ViewableEntity>> dialogViewController =
+                ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY);
+        System.out.println("Dialog view/controller loaded: " + dialogViewController);
+
+        //load applications selection view
         ViewWithController<ApplicationsFlowViewController> applicationsFlowViewParts = ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.SCREEN_APPLICATIONS_FLOW);
         applicationsFlowViewParts.controller().setDataContext(
                 null, null, metadataProvider, this::applicationsSelectionDone);

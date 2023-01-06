@@ -21,7 +21,7 @@
                                  <children>
                                     <HBox layoutX="10.0" layoutY="10.0" prefWidth="360.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <Button fx:id="btnSourceApplication" alignment="CENTER" mnemonicParsing="false" prefHeight="10.0" prefWidth="1000.0" text="Application" HBox.hgrow="ALWAYS">
+                                          <Button alignment="CENTER" mnemonicParsing="false" onAction="#onPickSourceApplicationClicked" prefHeight="10.0" prefWidth="1000.0" text="Application" HBox.hgrow="ALWAYS">
                                              <HBox.margin>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </HBox.margin>
@@ -29,7 +29,7 @@
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </padding>
                                           </Button>
-                                          <Button fx:id="btnSourceDataAsset" mnemonicParsing="false" prefHeight="10.0" prefWidth="1000.0" text="Data Asset">
+                                          <Button mnemonicParsing="false" onAction="#onPickSourceAssetClicked" prefHeight="10.0" prefWidth="1000.0" text="Data Asset">
                                              <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </padding>
@@ -63,7 +63,7 @@
                                  <children>
                                     <HBox layoutX="10.0" layoutY="10.0" prefWidth="1000.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <Button fx:id="btnTargetApplication" alignment="CENTER" mnemonicParsing="false" prefHeight="10.0" prefWidth="1000.0" text="Application" HBox.hgrow="ALWAYS">
+                                          <Button alignment="CENTER" mnemonicParsing="false" onAction="#onPickTargetApplicationClicked" prefHeight="10.0" prefWidth="1000.0" text="Application" HBox.hgrow="ALWAYS">
                                              <HBox.margin>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </HBox.margin>
@@ -71,7 +71,7 @@
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </padding>
                                           </Button>
-                                          <Button fx:id="btnTargetDataAsset" mnemonicParsing="false" prefHeight="10.0" prefWidth="1000.0" text="Data Asset" HBox.hgrow="ALWAYS">
+                                          <Button mnemonicParsing="false" onAction="#onPickTargetAssetClicked" prefHeight="10.0" prefWidth="1000.0" text="Data Asset" HBox.hgrow="ALWAYS">
                                              <padding>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </padding>
@@ -146,7 +146,7 @@
             <Separator prefWidth="200.0" />
             <HBox alignment="CENTER_RIGHT" minHeight="40.0" prefHeight="50.0" prefWidth="200.0" VBox.vgrow="NEVER">
                <children>
-                  <Button fx:id="btnFlowDetails" mnemonicParsing="false" text="Flow Details -&gt;" textAlignment="RIGHT">
+                  <Button mnemonicParsing="false" onAction="#onSubmitSourceTargetClicked" text="Flow Details -&gt;" textAlignment="RIGHT">
                      <font>
                         <Font size="14.0" />
                      </font>
