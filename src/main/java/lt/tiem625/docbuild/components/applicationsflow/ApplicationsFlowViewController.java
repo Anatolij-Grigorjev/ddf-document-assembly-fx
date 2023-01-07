@@ -1,9 +1,11 @@
 package lt.tiem625.docbuild.components.applicationsflow;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import lt.tiem625.docbuild.components.ViewWithController;
 import lt.tiem625.docbuild.components.ViewsKeys;
@@ -20,6 +22,7 @@ import lt.tiem625.docbuild.datasource.MetadataProvider;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -30,6 +33,9 @@ public class ApplicationsFlowViewController implements Initializable {
 
     @FXML
     private Label lblTargetDescription;
+
+    @FXML
+    private Button btnSubmitFlowDetails;
 
     private final ObjectProperty<BusinessApplication> sourceApplicationProp = new SimpleObjectProperty<>();
     private final ObjectProperty<BusinessApplication> targetApplicationProp = new SimpleObjectProperty<>();
@@ -44,46 +50,60 @@ public class ApplicationsFlowViewController implements Initializable {
                 .bind(sourceApplicationProp.map(businessApplication -> "Source Application:\n" + businessApplication.asView()));
         lblTargetDescription.textProperty()
                 .bind(targetApplicationProp.map(businessApplication -> "Target Application:\n" + businessApplication.asView()));
+        btnSubmitFlowDetails.disableProperty()
+                .bind(Bindings.or(
+                        Bindings.isNull(sourceApplicationProp),
+                        Bindings.isNull(targetApplicationProp))
+                );
     }
 
     @FXML
     private void onPickSourceApplicationClicked() {
 
+        doPickApplicationIntoProp(sourceApplicationProp, "Select SOURCE application");
+    }
+
+    @FXML
+    private void onPickTargetApplicationClicked() {
+        doPickApplicationIntoProp(targetApplicationProp, "Select TARGET application");
+    }
+
+    private void doPickApplicationIntoProp(ObjectProperty<BusinessApplication> prop, String pickDialogTitle) {
         ViewWithController<SelectableItemPickerController<Application>> applicationSelectDialog
                 = ViewsRepository.getAt(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY);
         applicationSelectDialog.controller().setDialogData(
-                businessApplicationPropAsSubtype(sourceApplicationProp, Application.class),
+                businessApplicationPropAsSubtype(prop, Application.class),
                 new HashSet<>(metadataProvider.getKnownApplications()),
                 ValueBuilder.notSupported()
         );
-        Application pickedApplication =
-                DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY, "Select source application");
-        sourceApplicationProp.set(pickedApplication);
+        Optional<Application> pickedApplication =
+                DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY, pickDialogTitle);
+        pickedApplication.ifPresent(prop::set);
     }
 
     @FXML
     private void onPickSourceAssetClicked() {
 
-        ViewWithController<SelectableItemPickerController<DataAsset>> applicationSelectDialog
-                = ViewsRepository.getAt(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY);
-        applicationSelectDialog.controller().setDialogData(
-                businessApplicationPropAsSubtype(sourceApplicationProp, DataAsset.class),
-                new HashSet<>(metadataProvider.getKnownDataAssets()),
-                ValueBuilder.notSupported()
-        );
-        Application pickedApplication =
-                DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY, "Select source data asset");
-        sourceApplicationProp.set(pickedApplication);
-    }
-
-    @FXML
-    private void onPickTargetApplicationClicked() {
-
+        doPickOrBuildDataAssetIntoProp(sourceApplicationProp, "Select SOURCE data asset");
     }
 
     @FXML
     private void onPickTargetAssetClicked() {
 
+        doPickOrBuildDataAssetIntoProp(targetApplicationProp, "Select TARGET data asset");
+    }
+
+    private void doPickOrBuildDataAssetIntoProp(ObjectProperty<BusinessApplication> prop, String pickDialogTitle) {
+        ViewWithController<SelectableItemPickerController<DataAsset>> assetSelectDialog
+                = ViewsRepository.getAt(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY);
+        assetSelectDialog.controller().setDialogData(
+                businessApplicationPropAsSubtype(prop, DataAsset.class),
+                new HashSet<>(metadataProvider.getKnownDataAssets()),
+                ValueBuilder.notSupported()
+        );
+        Optional<DataAsset> pickedDataAsset =
+                DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY, pickDialogTitle);
+        pickedDataAsset.ifPresent(prop::set);
     }
 
     @FXML
