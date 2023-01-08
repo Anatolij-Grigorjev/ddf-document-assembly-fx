@@ -1,7 +1,7 @@
 package lt.tiem625.docbuild.components.selectableitempicker;
 
 @FunctionalInterface
-public interface ValueBuilder<T> {
+public interface ValueBuildBehavior<T> {
 
     T buildFromText(String text);
 
@@ -9,8 +9,8 @@ public interface ValueBuilder<T> {
         return true;
     }
 
-    static <T> ValueBuilder<T> notSupported() {
-        return new ValueBuilder<>() {
+    static <T> ValueBuildBehavior<T> buildingNotSupported() {
+        return new ValueBuildBehavior<>() {
             @Override
             public T buildFromText(String text) {
                 return null;

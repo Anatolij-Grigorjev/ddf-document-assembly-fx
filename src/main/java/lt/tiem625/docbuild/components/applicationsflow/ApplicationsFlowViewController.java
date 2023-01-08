@@ -13,7 +13,7 @@ import lt.tiem625.docbuild.components.ViewsRepository;
 import lt.tiem625.docbuild.components.dialogutils.Alerts;
 import lt.tiem625.docbuild.components.dialogutils.DialogRunner;
 import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
-import lt.tiem625.docbuild.components.selectableitempicker.ValueBuilder;
+import lt.tiem625.docbuild.components.selectableitempicker.ValueBuildBehavior;
 import lt.tiem625.docbuild.data.Application;
 import lt.tiem625.docbuild.data.BusinessApplication;
 import lt.tiem625.docbuild.data.DataAsset;
@@ -74,7 +74,7 @@ public class ApplicationsFlowViewController implements Initializable {
         applicationSelectDialog.controller().setDialogData(
                 businessApplicationPropAsSubtype(prop, Application.class),
                 new HashSet<>(metadataProvider.getKnownApplications()),
-                ValueBuilder.notSupported()
+                ValueBuildBehavior.buildingNotSupported()
         );
         Optional<Application> pickedApplication =
                 DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY, pickDialogTitle);
@@ -99,7 +99,7 @@ public class ApplicationsFlowViewController implements Initializable {
         assetSelectDialog.controller().setDialogData(
                 businessApplicationPropAsSubtype(prop, DataAsset.class),
                 new HashSet<>(metadataProvider.getKnownDataAssets()),
-                ValueBuilder.notSupported()
+                ValueBuildBehavior.buildingNotSupported()
         );
         Optional<DataAsset> pickedDataAsset =
                 DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY, pickDialogTitle);

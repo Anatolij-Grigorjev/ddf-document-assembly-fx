@@ -32,7 +32,7 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
     private ListView<T> suggestionsListView;
 
     private T prevValue;
-    private ValueBuilder<T> valueBuilder;
+    private ValueBuildBehavior<T> valueBuildBehavior;
     private ObservableList<T> suggestionsObservableList;
     private final ObjectProperty<T> currentValueProp = new SimpleObjectProperty<>();
     private Stage dialogWindow;
@@ -48,7 +48,7 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
                                 .ifPresent(view -> Platform.runLater(() -> searchItemTextField.setText(view)))
                 );
         bindSuggestionsListToCurrentFieldText();
-        setDialogData(null, null, ValueBuilder.notSupported());
+        setDialogData(null, null, ValueBuildBehavior.buildingNotSupported());
     }
 
 
@@ -71,12 +71,12 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
             return;
         }
 
-        if (!valueBuilder.canBuildFromText()) {
+        if (!valueBuildBehavior.canBuildFromText()) {
             showUnsupportedFeatureAlert();
             return;
         }
 
-        currentValueProp.set(valueBuilder.buildFromText(searchItemTextField.getText()));
+        currentValueProp.set(valueBuildBehavior.buildFromText(searchItemTextField.getText()));
         dialogWindow.close();
     }
 
@@ -102,9 +102,9 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
         dialogWindow.close();
     }
 
-    public void setDialogData(T prevValue, Set<? extends T> suggestions, ValueBuilder<T> valueBuilder) {
-        Objects.requireNonNull(valueBuilder);
-        this.valueBuilder = valueBuilder;
+    public void setDialogData(T prevValue, Set<? extends T> suggestions, ValueBuildBehavior<T> valueBuildBehavior) {
+        Objects.requireNonNull(valueBuildBehavior);
+        this.valueBuildBehavior = valueBuildBehavior;
         this.prevValue = prevValue;
         currentValueProp.set(this.prevValue);
         setLabelTextFromPrevValue();
