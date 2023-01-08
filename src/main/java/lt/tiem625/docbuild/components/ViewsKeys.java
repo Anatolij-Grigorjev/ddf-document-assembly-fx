@@ -1,6 +1,7 @@
 package lt.tiem625.docbuild.components;
 
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
+import lt.tiem625.docbuild.components.entitycreate.TextAndItemEntityCreateViewController;
 import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
 
 public enum ViewsKeys {
@@ -12,7 +13,12 @@ public enum ViewsKeys {
     DIALOG_SELECT_KNOWN_ENTITY(
             "fxml/selectable-item-pane.fxml",
             SelectableItemPickerController.class
-    );
+    ),
+    DIALOG_CREATE_NEW_ENTITY(
+            "fxml/text-and-dependant-entity-builder.fxml",
+            TextAndItemEntityCreateViewController.class
+    )
+    ;
 
     private final String fxmlPath;
     private final Class<?> controllerClazz;

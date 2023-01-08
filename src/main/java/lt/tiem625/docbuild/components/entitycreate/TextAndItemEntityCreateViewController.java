@@ -14,9 +14,18 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lt.tiem625.docbuild.ViewableEntity;
 import lt.tiem625.docbuild.components.ValueDialogViewController;
+import lt.tiem625.docbuild.components.ViewWithController;
+import lt.tiem625.docbuild.components.ViewsKeys;
+import lt.tiem625.docbuild.components.ViewsRepository;
+import lt.tiem625.docbuild.components.dialogutils.DialogRunner;
+import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
+import lt.tiem625.docbuild.components.selectableitempicker.ValueBuildBehavior;
 
 import java.net.URL;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Controller for views created using the FXML view <code>fxml/text-and-dependant-entity-builder.fxml</code>
@@ -46,6 +55,8 @@ public class TextAndItemEntityCreateViewController<E extends ViewableEntity, I e
     private final ObjectProperty<I> pickedDependantItem = new SimpleObjectProperty<>();
     private final StringProperty presentText = new SimpleStringProperty();
 
+    private Set<I> dependantsSet;
+    private EntityConstructor<E, I> valueConstructor;
     private Stage dialogWindow;
 
     @Override
@@ -56,6 +67,7 @@ public class TextAndItemEntityCreateViewController<E extends ViewableEntity, I e
                         Bindings.isNull(pickedDependantItem),
                         Bindings.isEmpty(presentText))
                 );
+        tfTextInput.textProperty().bindBidirectional(presentText);
     }
 
     @FXML
@@ -66,17 +78,43 @@ public class TextAndItemEntityCreateViewController<E extends ViewableEntity, I e
 
     @FXML
     private void onCreateClicked() {
-
+        E constructedValue = valueConstructor.constructFrom(tfTextInput.getText(), pickedDependantItem.getValue());
+        currentValue.set(constructedValue);
+        dialogWindow.close();
     }
 
     @FXML
     private void onPickDependantClicked() {
-
+        ViewWithController<SelectableItemPickerController<I>> dialogParts =
+                ViewsRepository.getAt(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY);
+        dialogParts.controller().setDialogData(pickedDependantItem.getValue(), dependantsSet, ValueBuildBehavior.buildingNotSupported());
+        Optional<I> pickedValue =
+                DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY, "Select dependant...");
+        pickedValue.ifPresent(value -> {
+            pickedDependantItem.set(value);
+            lblPickedDependant.setText(value.asView());
+        });
     }
 
     @Override
     public ObservableValue<E> beginValueDialogContext(Stage dialogContext) {
         dialogWindow = dialogContext;
         return currentValue;
+    }
+
+    public void setCreationContext(
+            String textFieldLabel, String dependantPickLabel,
+            String initialText, Set<I> pickableValues,
+            EntityConstructor<E, I> entityConstructor) {
+
+        Objects.requireNonNull(entityConstructor);
+        if (pickableValues == null || pickableValues.isEmpty()) {
+            throw new IllegalArgumentException("dependants must be picked from non-empty presets list!");
+        }
+        this.lblTextInputName.setText(textFieldLabel);
+        this.lblDependantInputName.setText(dependantPickLabel);
+        this.presentText.set(initialText);
+        this.dependantsSet = pickableValues;
+        this.valueConstructor = entityConstructor;
     }
 }

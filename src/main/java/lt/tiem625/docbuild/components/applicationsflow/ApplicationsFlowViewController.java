@@ -12,11 +12,13 @@ import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsRepository;
 import lt.tiem625.docbuild.components.dialogutils.Alerts;
 import lt.tiem625.docbuild.components.dialogutils.DialogRunner;
+import lt.tiem625.docbuild.components.entitycreate.TextAndItemEntityCreateViewController;
 import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
 import lt.tiem625.docbuild.components.selectableitempicker.ValueBuildBehavior;
 import lt.tiem625.docbuild.data.Application;
 import lt.tiem625.docbuild.data.BusinessApplication;
 import lt.tiem625.docbuild.data.DataAsset;
+import lt.tiem625.docbuild.data.Organization;
 import lt.tiem625.docbuild.datasource.MetadataProvider;
 
 import java.net.URL;
@@ -99,8 +101,30 @@ public class ApplicationsFlowViewController implements Initializable {
         assetSelectDialog.controller().setDialogData(
                 businessApplicationPropAsSubtype(prop, DataAsset.class),
                 new HashSet<>(metadataProvider.getKnownDataAssets()),
-                ValueBuildBehavior.buildingNotSupported()
+                new ValueBuildBehavior<>() {
+                    @Override
+                    public boolean canBuildFromText() {
+                        return true;
+                    }
+
+                    @Override
+                    public DataAsset buildFromText(String text) {
+
+                        ViewWithController<TextAndItemEntityCreateViewController<DataAsset, Organization>> viewWithController =
+                                ViewsRepository.getAt(ViewsKeys.DIALOG_CREATE_NEW_ENTITY);
+                        viewWithController.controller()
+                                .setCreationContext(
+                                        "Data asset name:",
+                                        "Asset owner organization:",
+                                        text, new HashSet<>(metadataProvider.getKnownOrganizations()),
+                                        DataAsset::new);
+                        Optional<DataAsset> createdAsset =
+                                DialogRunner.runValueDialog(ViewsKeys.DIALOG_CREATE_NEW_ENTITY, "Create new data asset");
+                        return createdAsset.orElse(null);
+                    }
+                }
         );
+
         Optional<DataAsset> pickedDataAsset =
                 DialogRunner.runValueDialog(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY, pickDialogTitle);
         pickedDataAsset.ifPresent(prop::set);
