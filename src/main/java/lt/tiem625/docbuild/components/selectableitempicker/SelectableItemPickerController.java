@@ -76,8 +76,8 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
             return;
         }
 
+        Platform.runLater(() -> dialogWindow.close());
         currentValueProp.set(valueBuildBehavior.buildFromText(searchItemTextField.getText()));
-        dialogWindow.close();
     }
 
     private void showUnsupportedFeatureAlert() {
