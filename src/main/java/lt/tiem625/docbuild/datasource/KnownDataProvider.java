@@ -4,7 +4,7 @@ import lt.tiem625.docbuild.data.*;
 
 import java.util.List;
 
-public interface MetadataProvider {
+public interface KnownDataProvider {
 
     default List<Organization> getKnownOrganizations() {
         return List.of();

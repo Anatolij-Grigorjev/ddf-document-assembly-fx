@@ -4,7 +4,7 @@ import lt.tiem625.docbuild.data.*;
 
 import java.util.List;
 
-public class MockMetadataProvider implements MetadataProvider {
+public class MockMetadataDataProvider implements KnownDataProvider {
 
     @Override
     public List<Organization> getKnownOrganizations() {

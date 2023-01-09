@@ -19,7 +19,7 @@ import lt.tiem625.docbuild.data.Application;
 import lt.tiem625.docbuild.data.BusinessApplication;
 import lt.tiem625.docbuild.data.DataAsset;
 import lt.tiem625.docbuild.data.Organization;
-import lt.tiem625.docbuild.datasource.MetadataProvider;
+import lt.tiem625.docbuild.datasource.KnownDataProvider;
 
 import java.net.URL;
 import java.util.HashSet;
@@ -41,7 +41,7 @@ public class ApplicationsFlowViewController implements Initializable {
 
     private final ObjectProperty<BusinessApplication> sourceApplicationProp = new SimpleObjectProperty<>();
     private final ObjectProperty<BusinessApplication> targetApplicationProp = new SimpleObjectProperty<>();
-    private MetadataProvider metadataProvider;
+    private KnownDataProvider knownDataProvider;
     private Consumer<ApplicationsFlow> selectionDoneCallback;
 
 
@@ -75,7 +75,7 @@ public class ApplicationsFlowViewController implements Initializable {
                 = ViewsRepository.getAt(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY);
         applicationSelectDialog.controller().setDialogData(
                 businessApplicationPropAsSubtype(prop, Application.class),
-                new HashSet<>(metadataProvider.getKnownApplications()),
+                new HashSet<>(knownDataProvider.getKnownApplications()),
                 ValueBuildBehavior.buildingNotSupported()
         );
         Optional<Application> pickedApplication =
@@ -100,7 +100,7 @@ public class ApplicationsFlowViewController implements Initializable {
                 = ViewsRepository.getAt(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY);
         assetSelectDialog.controller().setDialogData(
                 businessApplicationPropAsSubtype(prop, DataAsset.class),
-                new HashSet<>(metadataProvider.getKnownDataAssets()),
+                new HashSet<>(knownDataProvider.getKnownDataAssets()),
                 new ValueBuildBehavior<>() {
                     @Override
                     public boolean canBuildFromText() {
@@ -116,7 +116,7 @@ public class ApplicationsFlowViewController implements Initializable {
                                 .setCreationContext(
                                         "Data asset name:",
                                         "Asset owner organization:",
-                                        text, new HashSet<>(metadataProvider.getKnownOrganizations()),
+                                        text, new HashSet<>(knownDataProvider.getKnownOrganizations()),
                                         DataAsset::new);
                         Optional<DataAsset> createdAsset =
                                 DialogRunner.runValueDialog(ViewsKeys.DIALOG_CREATE_NEW_ENTITY, "Create new data asset");
@@ -144,14 +144,14 @@ public class ApplicationsFlowViewController implements Initializable {
     public void setDataContext(
             BusinessApplication currentSource,
             BusinessApplication currentTarget,
-            MetadataProvider metadataProvider,
+            KnownDataProvider knownDataProvider,
             Consumer<ApplicationsFlow> selectionDoneCallback
     ) {
 
-        Objects.requireNonNull(metadataProvider);
+        Objects.requireNonNull(knownDataProvider);
         Objects.requireNonNull(selectionDoneCallback);
 
-        this.metadataProvider = metadataProvider;
+        this.knownDataProvider = knownDataProvider;
         this.selectionDoneCallback = selectionDoneCallback;
         this.sourceApplicationProp.set(currentSource);
         this.targetApplicationProp.set(currentTarget);

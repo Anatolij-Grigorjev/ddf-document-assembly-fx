@@ -9,8 +9,8 @@ import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsLoader;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlow;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
-import lt.tiem625.docbuild.datasource.MetadataProvider;
-import lt.tiem625.docbuild.datasource.MockMetadataProvider;
+import lt.tiem625.docbuild.datasource.KnownDataProvider;
+import lt.tiem625.docbuild.datasource.MockMetadataDataProvider;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ public class BuilderRunner extends Application {
 
     private final FlowConstruction flowConstruction = new FlowConstruction();
 
-    private final MetadataProvider metadataProvider = new MockMetadataProvider();
+    private final KnownDataProvider knownDataProvider = new MockMetadataDataProvider();
 
     private Stage mainViewStage;
 
@@ -35,7 +35,7 @@ public class BuilderRunner extends Application {
         //load applications selection view
         ViewWithController<ApplicationsFlowViewController> applicationsFlowViewParts = ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.SCREEN_APPLICATIONS_FLOW);
         applicationsFlowViewParts.controller().setDataContext(
-                null, null, metadataProvider, this::applicationsSelectionDone);
+                null, null, knownDataProvider, this::applicationsSelectionDone);
         Scene scene = new Scene(applicationsFlowViewParts.view(), 800, 600);
         mainViewStage.setScene(scene);
         mainViewStage.show();
