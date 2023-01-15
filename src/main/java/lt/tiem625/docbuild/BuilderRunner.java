@@ -4,15 +4,19 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lt.tiem625.docbuild.binding.FlowConstruction;
+import lt.tiem625.docbuild.binding.FlowConstruction.ApplicationsMappingsContext;
 import lt.tiem625.docbuild.components.ViewWithController;
 import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsLoader;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlow;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
+import lt.tiem625.docbuild.components.structuresflow.StructureMapsFlowViewController;
+import lt.tiem625.docbuild.components.structuresflow.StructuresMapFlow;
 import lt.tiem625.docbuild.datasource.KnownDataRepository;
 import lt.tiem625.docbuild.datasource.MockMetadataDataProvider;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * JavaFX App
@@ -20,6 +24,7 @@ import java.io.IOException;
 public class BuilderRunner extends Application {
 
     private final FlowConstruction flowConstruction = new FlowConstruction();
+    private ApplicationsMappingsContext applicationsMappingsContext;
 
     private final KnownDataRepository knownDataRepository = new KnownDataRepository(new MockMetadataDataProvider());
 
@@ -33,7 +38,8 @@ public class BuilderRunner extends Application {
         preloadDialogFXMLAtViewKey(ViewsKeys.DIALOG_CREATE_NEW_ENTITY);
 
         //load applications selection view
-        ViewWithController<ApplicationsFlowViewController> applicationsFlowViewParts = ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.SCREEN_APPLICATIONS_FLOW);
+        ViewWithController<ApplicationsFlowViewController> applicationsFlowViewParts =
+                ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.SCREEN_APPLICATIONS_FLOW);
         applicationsFlowViewParts.controller().setDataContext(
                 null, null, knownDataRepository, this::applicationsSelectionDone);
         Scene scene = new Scene(applicationsFlowViewParts.view(), 800, 600);
@@ -48,6 +54,24 @@ public class BuilderRunner extends Application {
 
     private void applicationsSelectionDone(ApplicationsFlow applicationsFlow) {
         System.out.println(applicationsFlow);
+        applicationsMappingsContext =
+                flowConstruction.applicationsMappingsConstruction(applicationsFlow.source(), applicationsFlow.target());
+        try {
+            ViewWithController<StructureMapsFlowViewController> structureMapsFlowViewParts =
+                    ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.SCREEN_STRUCTURES_MAPPINGS);
+            structureMapsFlowViewParts.controller().setDataContext(
+                    applicationsMappingsContext.source(), applicationsMappingsContext.target(),
+                    knownDataRepository, this::structureMappingsDone
+            );
+            var nextScene = new Scene(structureMapsFlowViewParts.view(), 800, 600);
+            mainViewStage.setScene(nextScene);
+        } catch (IOException loadViewError) {
+            throw new IllegalStateException(loadViewError);
+        }
+    }
+
+    private void structureMappingsDone(List<StructuresMapFlow> structuresMappings) {
+        System.out.println(structuresMappings);
     }
 
     public static void main(String[] args) {

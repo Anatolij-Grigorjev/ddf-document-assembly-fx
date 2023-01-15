@@ -49,6 +49,14 @@ public class FlowConstruction {
 
         }
 
+        public BusinessApplication source() {
+            return constructing.source;
+        }
+
+        public BusinessApplication target() {
+            return constructing.target;
+        }
+
         public List<DataFlowMapping> getDataFlowsListView() {
             return Collections.unmodifiableList(constructing.dataFlowMappings);
         }

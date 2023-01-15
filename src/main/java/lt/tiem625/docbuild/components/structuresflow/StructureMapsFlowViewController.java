@@ -81,7 +81,7 @@ public class StructureMapsFlowViewController implements Initializable {
     @FXML
     private void onEditApplicationsContextClicked() {
         var answer = Alerts.alertPromptOKCancel("Are you sure you wish to change the applications context? " +
-                "This will discard all create structure mappings.");
+                "This will discard all created structure mappings.");
 
         switch (answer) {
 
@@ -94,7 +94,7 @@ public class StructureMapsFlowViewController implements Initializable {
         }
     }
 
-    public void initData(
+    public void setDataContext(
             BusinessApplication sourceApplication,
             BusinessApplication targetApplication,
             KnownDataRepository repository,
@@ -107,6 +107,9 @@ public class StructureMapsFlowViewController implements Initializable {
 
         this.sourceApplication = sourceApplication;
         this.targetApplication = targetApplication;
+        lblSourceApplication.setText(sourceApplication.asView());
+        lblTargetApplication.setText(targetApplication.asView());
+
         this.repository = repository;
         this.inputFinalizedCallback = inputFinalizedCallback;
     }
