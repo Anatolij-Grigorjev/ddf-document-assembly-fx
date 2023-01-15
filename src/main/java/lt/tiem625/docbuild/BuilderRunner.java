@@ -8,6 +8,7 @@ import lt.tiem625.docbuild.binding.FlowConstruction.ApplicationsMappingsContext;
 import lt.tiem625.docbuild.components.ViewWithController;
 import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsLoader;
+import lt.tiem625.docbuild.components.ViewsRepository;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlow;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
 import lt.tiem625.docbuild.components.structuresflow.StructureMapsFlowViewController;
@@ -33,13 +34,12 @@ public class BuilderRunner extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         mainViewStage = stage;
-        //load helper dialog views
-        preloadDialogFXMLAtViewKey(ViewsKeys.DIALOG_SELECT_KNOWN_ENTITY);
-        preloadDialogFXMLAtViewKey(ViewsKeys.DIALOG_CREATE_NEW_ENTITY);
+        //preload views
+        cacheFXMLViews();
 
         //load applications selection view
         ViewWithController<ApplicationsFlowViewController> applicationsFlowViewParts =
-                ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.SCREEN_APPLICATIONS_FLOW);
+                ViewsRepository.getAt(ViewsKeys.SCREEN_APPLICATIONS_FLOW);
         applicationsFlowViewParts.controller().setDataContext(
                 null, null, knownDataRepository, this::applicationsSelectionDone);
         Scene scene = new Scene(applicationsFlowViewParts.view(), 800, 600);
@@ -47,31 +47,36 @@ public class BuilderRunner extends Application {
         mainViewStage.show();
     }
 
-    private static void preloadDialogFXMLAtViewKey(ViewsKeys viewKey) throws IOException {
-        var dialogViewController = ViewsLoader.loadAndStoreViewAtKey(viewKey);
-        System.out.println("Dialog view/controller loaded: " + dialogViewController);
+    private void cacheFXMLViews() throws IOException {
+        for (ViewsKeys viewKey : ViewsKeys.values()) {
+            preloadViewFXML(viewKey);
+        }
+    }
+
+    private static void preloadViewFXML(ViewsKeys viewKey) throws IOException {
+        var viewController = ViewsLoader.loadAndStoreViewAtKey(viewKey);
+        System.out.println("view/controller loaded: " + viewController);
     }
 
     private void applicationsSelectionDone(ApplicationsFlow applicationsFlow) {
         System.out.println(applicationsFlow);
         applicationsMappingsContext =
                 flowConstruction.applicationsMappingsConstruction(applicationsFlow.source(), applicationsFlow.target());
-        try {
-            ViewWithController<StructureMapsFlowViewController> structureMapsFlowViewParts =
-                    ViewsLoader.loadAndStoreViewAtKey(ViewsKeys.SCREEN_STRUCTURES_MAPPINGS);
-            structureMapsFlowViewParts.controller().setDataContext(
-                    applicationsMappingsContext.source(), applicationsMappingsContext.target(),
-                    knownDataRepository, this::structureMappingsDone
-            );
-            var nextScene = new Scene(structureMapsFlowViewParts.view(), 800, 600);
-            mainViewStage.setScene(nextScene);
-        } catch (IOException loadViewError) {
-            throw new IllegalStateException(loadViewError);
-        }
+
+        ViewWithController<StructureMapsFlowViewController> structureMapsFlowViewParts =
+                ViewsRepository.getAt(ViewsKeys.SCREEN_STRUCTURES_MAPPINGS);
+        structureMapsFlowViewParts.controller().setDataContext(
+                applicationsMappingsContext.source(), applicationsMappingsContext.target(),
+                knownDataRepository, this::structureMappingsDone
+        );
+        var nextScene = new Scene(structureMapsFlowViewParts.view(), 800, 600);
+        mainViewStage.setScene(nextScene);
+
     }
 
     private void structureMappingsDone(List<StructuresMapFlow> structuresMappings) {
         System.out.println(structuresMappings);
+
     }
 
     public static void main(String[] args) {
