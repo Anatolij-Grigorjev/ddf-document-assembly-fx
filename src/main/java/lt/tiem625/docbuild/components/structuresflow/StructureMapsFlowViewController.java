@@ -9,6 +9,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import lt.tiem625.docbuild.components.ViewsKeys;
+import lt.tiem625.docbuild.components.ViewsTransitioner;
+import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
 import lt.tiem625.docbuild.components.dialogutils.Alerts;
 import lt.tiem625.docbuild.data.BusinessApplication;
 import lt.tiem625.docbuild.datasource.KnownDataRepository;
@@ -43,6 +46,7 @@ public class StructureMapsFlowViewController implements Initializable {
     private Button btnFinalizeFlow;
     private KnownDataRepository repository;
     private Consumer<List<StructuresMapFlow>> inputFinalizedCallback;
+    private ViewsTransitioner viewsTransitioner;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -89,7 +93,13 @@ public class StructureMapsFlowViewController implements Initializable {
                 return;
             }
             case PROCEED -> {
-                throw new UnsupportedOperationException("change view on main stage to previous");
+                viewsTransitioner.<ApplicationsFlowViewController>transitionToViewAtKey(
+                        ViewsKeys.SCREEN_APPLICATIONS_FLOW,
+                        controller -> {
+                            controller.setDataContext(
+                                    sourceApplication, targetApplication, repository, System.out::println
+                            );
+                        });
             }
         }
     }
@@ -97,11 +107,13 @@ public class StructureMapsFlowViewController implements Initializable {
     public void setDataContext(
             BusinessApplication sourceApplication,
             BusinessApplication targetApplication,
+            ViewsTransitioner viewsTransitioner,
             KnownDataRepository repository,
             Consumer<List<StructuresMapFlow>> inputFinalizedCallback) {
 
         Objects.requireNonNull(sourceApplication);
         Objects.requireNonNull(targetApplication);
+        Objects.requireNonNull(viewsTransitioner);
         Objects.requireNonNull(repository);
         Objects.requireNonNull(inputFinalizedCallback);
 
@@ -110,6 +122,7 @@ public class StructureMapsFlowViewController implements Initializable {
         lblSourceApplication.setText(sourceApplication.asView());
         lblTargetApplication.setText(targetApplication.asView());
 
+        this.viewsTransitioner = viewsTransitioner;
         this.repository = repository;
         this.inputFinalizedCallback = inputFinalizedCallback;
     }

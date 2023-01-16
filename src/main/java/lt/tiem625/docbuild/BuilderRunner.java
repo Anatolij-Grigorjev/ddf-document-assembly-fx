@@ -1,14 +1,12 @@
 package lt.tiem625.docbuild;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lt.tiem625.docbuild.binding.FlowConstruction;
 import lt.tiem625.docbuild.binding.FlowConstruction.ApplicationsMappingsContext;
-import lt.tiem625.docbuild.components.ViewWithController;
 import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsLoader;
-import lt.tiem625.docbuild.components.ViewsRepository;
+import lt.tiem625.docbuild.components.ViewsTransitioner;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlow;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
 import lt.tiem625.docbuild.components.structuresflow.StructureMapsFlowViewController;
@@ -29,22 +27,22 @@ public class BuilderRunner extends Application {
 
     private final KnownDataRepository knownDataRepository = new KnownDataRepository(new MockMetadataDataProvider());
 
-    private Stage mainViewStage;
+    private ViewsTransitioner viewsTransitioner;
 
     @Override
     public void start(Stage stage) throws IOException {
-        mainViewStage = stage;
+        viewsTransitioner = new ViewsTransitioner(stage);
         //preload views
         cacheFXMLViews();
 
-        //load applications selection view
-        ViewWithController<ApplicationsFlowViewController> applicationsFlowViewParts =
-                ViewsRepository.getAt(ViewsKeys.SCREEN_APPLICATIONS_FLOW);
-        applicationsFlowViewParts.controller().setDataContext(
-                null, null, knownDataRepository, this::applicationsSelectionDone);
-        Scene scene = new Scene(applicationsFlowViewParts.view(), 800, 600);
-        mainViewStage.setScene(scene);
-        mainViewStage.show();
+        viewsTransitioner.<ApplicationsFlowViewController>transitionToViewAtKey(
+                ViewsKeys.SCREEN_APPLICATIONS_FLOW,
+                controller -> {
+                    controller.setDataContext(
+                            null, null, knownDataRepository, this::applicationsSelectionDone);
+                });
+
+        stage.show();
     }
 
     private void cacheFXMLViews() throws IOException {
@@ -63,15 +61,13 @@ public class BuilderRunner extends Application {
         applicationsMappingsContext =
                 flowConstruction.applicationsMappingsConstruction(applicationsFlow.source(), applicationsFlow.target());
 
-        ViewWithController<StructureMapsFlowViewController> structureMapsFlowViewParts =
-                ViewsRepository.getAt(ViewsKeys.SCREEN_STRUCTURES_MAPPINGS);
-        structureMapsFlowViewParts.controller().setDataContext(
-                applicationsMappingsContext.source(), applicationsMappingsContext.target(),
-                knownDataRepository, this::structureMappingsDone
-        );
-        var nextScene = new Scene(structureMapsFlowViewParts.view(), 800, 600);
-        mainViewStage.setScene(nextScene);
-
+        viewsTransitioner.<StructureMapsFlowViewController>transitionToViewAtKey(
+                ViewsKeys.SCREEN_STRUCTURES_MAPPINGS, controller -> {
+                    controller.setDataContext(
+                            applicationsMappingsContext.source(), applicationsMappingsContext.target(),
+                            viewsTransitioner, knownDataRepository, this::structureMappingsDone
+                    );
+                });
     }
 
     private void structureMappingsDone(List<StructuresMapFlow> structuresMappings) {
