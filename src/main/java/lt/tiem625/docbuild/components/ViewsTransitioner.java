@@ -25,9 +25,9 @@ public class ViewsTransitioner {
         ViewWithController<T> viewWithController = ViewsRepository.getAt(viewKey);
         controllerDataSetter.accept(viewWithController.controller());
         var view = viewWithController.view();
-        var scene =
-                Optional.ofNullable(view.getScene())
-                .orElse(new Scene(view, VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
+        var scene = Optional
+                .ofNullable(view.getScene())
+                .orElseGet(() -> new Scene(view, VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
         stage.setScene(scene);
     }
 }
