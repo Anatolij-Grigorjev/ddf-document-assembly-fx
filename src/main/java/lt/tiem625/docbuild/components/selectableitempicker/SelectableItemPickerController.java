@@ -13,8 +13,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import lt.tiem625.docbuild.ViewableEntity;
-import lt.tiem625.docbuild.components.ValueDialogViewController;
 import lt.tiem625.docbuild.components.dialogutils.Alerts;
+import lt.tiem625.docbuild.components.dialogutils.ValueDialogViewController;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;

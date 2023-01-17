@@ -1,6 +1,5 @@
 package lt.tiem625.docbuild.components.dialogutils;
 
-import lt.tiem625.docbuild.components.ValueDialogViewController;
 import lt.tiem625.docbuild.components.ViewWithController;
 import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsRepository;

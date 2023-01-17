@@ -13,11 +13,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lt.tiem625.docbuild.ViewableEntity;
-import lt.tiem625.docbuild.components.ValueDialogViewController;
 import lt.tiem625.docbuild.components.ViewWithController;
 import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsRepository;
 import lt.tiem625.docbuild.components.dialogutils.DialogRunner;
+import lt.tiem625.docbuild.components.dialogutils.ValueDialogViewController;
 import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
 import lt.tiem625.docbuild.components.selectableitempicker.ValueBuildBehavior;
 
