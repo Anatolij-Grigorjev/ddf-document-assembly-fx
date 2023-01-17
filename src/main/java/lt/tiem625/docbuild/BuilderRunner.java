@@ -65,7 +65,8 @@ public class BuilderRunner extends Application {
                 ViewsKeys.SCREEN_STRUCTURES_MAPPINGS, controller -> {
                     controller.setDataContext(
                             applicationsMappingsContext.source(), applicationsMappingsContext.target(),
-                            viewsTransitioner, knownDataRepository, this::structureMappingsDone
+                            viewsTransitioner, knownDataRepository,
+                            this::applicationsSelectionDone, this::structureMappingsDone
                     );
                 });
     }
