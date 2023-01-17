@@ -14,7 +14,7 @@ import lt.tiem625.docbuild.components.ViewsTransitioner;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlow;
 import lt.tiem625.docbuild.components.applicationsflow.ApplicationsFlowViewController;
 import lt.tiem625.docbuild.components.dialogutils.Alerts;
-import lt.tiem625.docbuild.data.BusinessApplication;
+import lt.tiem625.docbuild.data.*;
 import lt.tiem625.docbuild.datasource.KnownDataRepository;
 
 import java.net.URL;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class StructureMapsFlowViewController implements Initializable {
@@ -58,7 +59,7 @@ public class StructureMapsFlowViewController implements Initializable {
         btnRemoveStructuresMapping.disableProperty()
                 .bind(Bindings.or(
                         structureMaps.emptyProperty(),
-                        lvStructureMaps.getSelectionModel().selectedItemProperty().isNotNull()
+                        lvStructureMaps.getSelectionModel().selectedItemProperty().isNull()
                 ));
     }
 
@@ -79,9 +80,15 @@ public class StructureMapsFlowViewController implements Initializable {
                 .ifPresent(structureMaps::remove);
     }
 
+    private final static AtomicInteger counter = new AtomicInteger(0);
     @FXML
     private void onAddStructuresMappingClicked() {
-        throw new UnsupportedOperationException("popup create structure dialog");
+
+        structureMaps.add(new StructuresMapFlow(
+                new Structure(sourceApplication, "source-" + counter.incrementAndGet(), new StructureType("SQL Table")),
+                new Service(targetApplication, "unknown-" + counter.incrementAndGet(), new IntegrationType("API")),
+                new Structure(targetApplication, "target-" + counter.incrementAndGet(), new StructureType("SQL Table")))
+        );
     }
 
     @FXML
@@ -125,6 +132,7 @@ public class StructureMapsFlowViewController implements Initializable {
         this.targetApplication = targetApplication;
         lblSourceApplication.setText(sourceApplication.asView());
         lblTargetApplication.setText(targetApplication.asView());
+        structureMaps.clear();
 
         this.viewsTransitioner = viewsTransitioner;
         this.repository = repository;
