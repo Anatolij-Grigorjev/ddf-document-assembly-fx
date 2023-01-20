@@ -1,26 +1,23 @@
 package lt.tiem625.docbuild.components.selectableitempicker;
 
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import lt.tiem625.docbuild.ViewableEntity;
+import lt.tiem625.docbuild.components.dialogutils.AbstractPropertyValueDialog;
 import lt.tiem625.docbuild.components.dialogutils.Alerts;
-import lt.tiem625.docbuild.components.dialogutils.ValueDialogViewController;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
 import java.util.*;
 
-public class SelectableItemPickerController<T extends ViewableEntity> implements Initializable, ValueDialogViewController<T> {
+public class SelectableItemPickerController<T extends ViewableEntity>  extends AbstractPropertyValueDialog<T> implements Initializable {
 
     @FXML
     private Label changingEntityLabel;
@@ -34,8 +31,6 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
     private T prevValue;
     private ValueBuildBehavior<T> valueBuildBehavior;
     private ObservableList<T> suggestionsObservableList;
-    private final ObjectProperty<T> currentValueProp = new SimpleObjectProperty<>();
-    private Stage dialogWindow;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -51,18 +46,10 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
         setDialogData(null, null, ValueBuildBehavior.buildingNotSupported());
     }
 
-
-    @Override
-    public ObservableValue<T> beginValueDialogContext(Stage dialogContext) {
-        this.dialogWindow = dialogContext;
-        return currentValueProp;
-    }
-
     @FXML
     private void onSubmitClicked() {
         if (getVisibleSuggestionsCount() == 1) {
-            currentValueProp.set(suggestionsListView.getItems().get(0));
-            dialogWindow.close();
+            setCurrentFinal(suggestionsListView.getItems().get(0));
             return;
         }
 
@@ -77,7 +64,7 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
         }
 
         Platform.runLater(() -> dialogWindow.close());
-        currentValueProp.set(valueBuildBehavior.buildFromText(searchItemTextField.getText()));
+        currentValue.set(valueBuildBehavior.buildFromText(searchItemTextField.getText()));
     }
 
     private void showUnsupportedFeatureAlert() {
@@ -98,15 +85,14 @@ public class SelectableItemPickerController<T extends ViewableEntity> implements
 
     @FXML
     private void onDiscardClicked() {
-        currentValueProp.set(this.prevValue);
-        dialogWindow.close();
+        setCurrentFinal(prevValue);
     }
 
     public void setDialogData(T prevValue, Set<? extends T> suggestions, ValueBuildBehavior<T> valueBuildBehavior) {
         Objects.requireNonNull(valueBuildBehavior);
         this.valueBuildBehavior = valueBuildBehavior;
         this.prevValue = prevValue;
-        currentValueProp.set(this.prevValue);
+        currentValue.set(this.prevValue);
         setLabelTextFromPrevValue();
         setTextFieldFromPrevValue();
 

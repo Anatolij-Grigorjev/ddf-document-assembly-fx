@@ -5,19 +5,17 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import lt.tiem625.docbuild.ViewableEntity;
 import lt.tiem625.docbuild.components.ViewWithController;
 import lt.tiem625.docbuild.components.ViewsKeys;
 import lt.tiem625.docbuild.components.ViewsRepository;
+import lt.tiem625.docbuild.components.dialogutils.AbstractPropertyValueDialog;
 import lt.tiem625.docbuild.components.dialogutils.DialogRunner;
-import lt.tiem625.docbuild.components.dialogutils.ValueDialogViewController;
 import lt.tiem625.docbuild.components.selectableitempicker.SelectableItemPickerController;
 import lt.tiem625.docbuild.components.selectableitempicker.ValueBuildBehavior;
 
@@ -34,7 +32,7 @@ import java.util.Set;
  * @param <E> type of entity being created
  * @param <I> type of dependant item picked for creation
  */
-public class TextAndItemEntityCreateViewController<E extends ViewableEntity, I extends ViewableEntity> implements Initializable, ValueDialogViewController<E> {
+public class TextAndItemEntityCreateViewController<E extends ViewableEntity, I extends ViewableEntity> extends AbstractPropertyValueDialog<E> implements Initializable {
 
     @FXML
     private Label lblTextInputName;
@@ -51,13 +49,11 @@ public class TextAndItemEntityCreateViewController<E extends ViewableEntity, I e
     @FXML
     private TextField tfTextInput;
 
-    private final ObjectProperty<E> currentValue = new SimpleObjectProperty<>();
     private final ObjectProperty<I> pickedDependantItem = new SimpleObjectProperty<>();
     private final StringProperty presentText = new SimpleStringProperty();
 
     private Set<I> dependantsSet;
     private EntityConstructor<E, I> valueConstructor;
-    private Stage dialogWindow;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -72,15 +68,13 @@ public class TextAndItemEntityCreateViewController<E extends ViewableEntity, I e
 
     @FXML
     private void onDiscardClicked() {
-        currentValue.set(null);
-        dialogWindow.close();
+        setCurrentFinal(null);
     }
 
     @FXML
     private void onCreateClicked() {
         E constructedValue = valueConstructor.constructFrom(tfTextInput.getText(), pickedDependantItem.getValue());
-        currentValue.set(constructedValue);
-        dialogWindow.close();
+        setCurrentFinal(constructedValue);
     }
 
     @FXML
@@ -94,12 +88,6 @@ public class TextAndItemEntityCreateViewController<E extends ViewableEntity, I e
             pickedDependantItem.set(value);
             lblPickedDependant.setText(value.asView());
         });
-    }
-
-    @Override
-    public ObservableValue<E> beginValueDialogContext(Stage dialogContext) {
-        dialogWindow = dialogContext;
-        return currentValue;
     }
 
     public void setCreationContext(
